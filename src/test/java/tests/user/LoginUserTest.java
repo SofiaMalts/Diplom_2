@@ -35,8 +35,7 @@ public class LoginUserTest {
     }
 
     @Test
-    @DisplayName("Check user login")
-    @Description("Verify that user can login with valid credentials")
+    @DisplayName("Проверить вход в систему с валидными валидными логином и паролем")
     public void testUserLogin() {
         CreateUserSteps.createNewUser(validUser);
         Response response = CreateUserSteps.loginUser(validUser);
@@ -44,8 +43,7 @@ public class LoginUserTest {
     }
 
     @Test
-    @DisplayName("Check user login with invalid credentials")
-    @Description("Verify that system doesn't allow to login with invalid credentials")
+    @DisplayName("Проверить вход в систему с валидными невалидными логином и паролем")
     public void testLoginInvalidCredentials() {
         CreateUserSteps.createNewUser(validUser);
         testLoginWithInvalidPassword();
@@ -53,21 +51,21 @@ public class LoginUserTest {
         testLoginWithInvalidLoginAndPassword();
     }
 
-    @Step("Test login with invalid password")
+    @Step("Проверить вход с невалидным паролем")
     public void testLoginWithInvalidPassword() {
         UserResponse expectedObject = new UserResponse(false, errorMessage);
         Response response = CreateUserSteps.loginUser(invalidUserOne);
         CreateUserSteps.verifyResponseData(response, UNAUTHORIZED_CODE, expectedObject);
     }
 
-    @Step("Test login with invalid login")
+    @Step("Проверить вход с невалидным логином")
     public void testLoginWithInvalidLogin() {
         UserResponse expectedObject = new UserResponse(false, errorMessage);
         Response response = CreateUserSteps.loginUser(invalidUserTwo);
         CreateUserSteps.verifyResponseData(response, UNAUTHORIZED_CODE, expectedObject);
     }
 
-    @Step("Test login with invalid login and password")
+    @Step("Проверить вход с невалидными логином и паролем")
     public void testLoginWithInvalidLoginAndPassword() {
         UserResponse expectedObject = new UserResponse(false, errorMessage);
         Response response = CreateUserSteps.loginUser(invalidUserThree);

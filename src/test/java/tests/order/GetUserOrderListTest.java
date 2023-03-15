@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import site.nomoreparties.stellarburgers.model.user.User;
@@ -14,9 +15,9 @@ import site.nomoreparties.stellarburgers.steps.user.CreateUserSteps;
 import static constants.Url.STELLARBURGERS_URL;
 
 public class GetUserOrderListTest {
-    private final String userEmail = "apiTestUser6@tstmail.com";
-    private final String userName = "SofiaTestUser6";
-    private final String password = "P@ssW0rd137";
+    private final String userEmail = RandomStringUtils.random(6, true, true)+"@tstmail.com";
+    private final String userName = RandomStringUtils.random(9, true, true);
+    private final String password = RandomStringUtils.random(6, true, true);
 
     User user = new User(userEmail, password, userName);
 
@@ -26,14 +27,14 @@ public class GetUserOrderListTest {
     }
 
     @Test
-    @DisplayName("Test getting order list for user")
-    @Description("Test getting order list for authorized and unauthorized users")
+    @DisplayName("Проверить получение списка заказов пользователя")
+    @Description("Проверить получение списка заказов авторизованного и неавторизованного пользователя")
     public void testGetOrderListForUser() {
         testAuthorizedGetOrderListForUser();
         testUnauthorizedGetOrderListForUser();
     }
 
-    @Step("Check getting order list for authorized user")
+    @Step("Проверить получение списка заказов авторизованного пользователя")
     public void testAuthorizedGetOrderListForUser() {
         CreateUserSteps.createNewUser(user);
         String token = CreateUserSteps.getUserTokenByUser(user);
@@ -42,7 +43,7 @@ public class GetUserOrderListTest {
         CreateUserSteps.deleteByToken(token);
     }
 
-    @Step("Check getting order list for unauthorized user")
+    @Step("Проверить получение списка заказов неавторизованного пользователя")
     public void testUnauthorizedGetOrderListForUser() {
         Response response = OrderSteps.getOrdersForUser();
         OrderSteps.verifyUnauthorizedGetOrdersResponse(response);

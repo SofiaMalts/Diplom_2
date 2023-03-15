@@ -33,29 +33,29 @@ public class UpdateUserTest {
     }
 
     @Test
-    @DisplayName("Check authorized user data update")
-    @Description("Verify that system allows to update user parameters when access token is provided")
+    @DisplayName("Проверить обновление данных авторизованного пользователя")
+    @Description("Убедиться, что система позволяет обновить данные авторизованного пользователя")
     public void testAuthorizedUserUpdate() {
         testAuthNameUpdate();
         testAuthEmailUpdate();
         testAuthNameAndEmailUpdate();
     }
 
-    @Step("Test authorized update of \"name\" parameter")
+    @Step("Проверить обновление параметра \"name\" авторизованного пользователя")
     public void testAuthNameUpdate() {
         CreateUserSteps.createNewUser(userOne);
         Response response = CreateUserSteps.updateUserParameterAuth(userOne, "name", newUserName);
         CreateUserSteps.verifySuccessfulUpdateResponseData(response, OK_CODE, true, userOne.getEmail(), newUserName);
     }
 
-    @Step("Test authorized update of \"email\" parameter")
+    @Step("Проверить обновление параметра \"email\" авторизованного пользователя")
     public void testAuthEmailUpdate() {
         CreateUserSteps.createNewUser(userOne);
         Response response = CreateUserSteps.updateUserParameterAuth(userOne, "email", newUserEmail);
         CreateUserSteps.verifySuccessfulUpdateResponseData(response, OK_CODE, true, newUserEmail, userOne.getName());
     }
 
-    @Step("Test authorized update of \"name\" and \"email\" parameters")
+    @Step("Проверить обновление параметров \"name\" and \"email\" авторизованного пользователя")
     public void testAuthNameAndEmailUpdate() {
         CreateUserSteps.createNewUser(userOne);
         Response response = CreateUserSteps.updateWholeUserAuth(userOne, updatedUser);
@@ -63,15 +63,15 @@ public class UpdateUserTest {
     }
 
     @Test
-    @DisplayName("Check unauthorized user data update")
-    @Description("Verify that system allows to update user parameters when access token is not provided")
+    @DisplayName("Проверить обновление данных неавторизованного пользователя")
+    @Description("Убедиться, что система позволяет обновить данные неавторизованного пользователя")
     public void testUnauthorizedUserUpdate() {
         testUnauthorizedNameUpdate();
         testUnauthorizedEmailUpdate();
         testUnauthorizedNameAndEmailUpdate();
     }
 
-    @Step("Test unauthorized update of \"name\" parameter")
+    @Step("Проверить обновление параметра \"name\" неавторизованного пользователя")
     public void testUnauthorizedNameUpdate() {
         CreateUserSteps.createNewUser(userOne);
         UserResponse expectedResponse = new UserResponse(false, unauthorizedError);
@@ -80,7 +80,7 @@ public class UpdateUserTest {
         CreateUserSteps.deleteUser(userOne);
     }
 
-    @Step("Test unauthorized update of \"email\" parameter")
+    @Step("Проверить обновление параметра \"email\" неавторизованного пользователя")
     public void testUnauthorizedEmailUpdate() {
         CreateUserSteps.createNewUser(userOne);
         UserResponse expectedResponse = new UserResponse(false, unauthorizedError);
@@ -89,7 +89,7 @@ public class UpdateUserTest {
         CreateUserSteps.deleteUser(userOne);
     }
 
-    @Step("Test unauthorized update of \"name\" and \"email\" parameters")
+    @Step("Проверить обновление параметров \"name\" and \"email\" неавторизованного пользователя")
     public void testUnauthorizedNameAndEmailUpdate() {
         CreateUserSteps.createNewUser(userOne);
         UserResponse expectedResponse = new UserResponse(false, unauthorizedError);

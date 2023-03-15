@@ -4,6 +4,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +19,9 @@ import static constants.Url.STELLARBURGERS_URL;
 public class CreateUserTest {
     private final String userAlreadyExistsMessage = "User already exists";
     private final String requiredFieldNotSent = "Email, password and name are required fields";
-    private final String userEmail = "apiTestUser6@tstmail.com";
-    private final String userName = "SofiaTestUser6";
-    private final String password = "P@ssW0rd137";
+    private final String userEmail = RandomStringUtils.random(6, true, true)+"@tstmail.com";
+    private final String userName = RandomStringUtils.random(6, true, true);
+    private final String password = RandomStringUtils.random(6, true, true);
 
     User user = new User(userEmail, password, userName);
 
@@ -30,16 +31,15 @@ public class CreateUserTest {
     }
 
     @Test
-    @DisplayName("Check user creation")
-    @Description("Check if user can be created by correct api request")
+    @DisplayName("Проверить создание нового пользователя")
     public void testNewUserCreation() {
         Response response = CreateUserSteps.createNewUser(user);
         CreateUserSteps.verifySuccessfulCreationResponseData(response, OK_CODE, true, userEmail, userName);
     }
 
     @Test
-    @DisplayName("Check user creation of duplicate user")
-    @Description("Verify that system doesn't allow to create user that already exists")
+    @DisplayName("Проверить создание пользователя, уже существующего в системе")
+    @Description("Убедиться, что система не позволяет создать пользователя с уже существующего в системе")
     public void testDuplicateUserCreation() {
         UserResponse expectedObject = new UserResponse(false, userAlreadyExistsMessage);
         Response responseOne = CreateUserSteps.createNewUser(user);
@@ -49,8 +49,8 @@ public class CreateUserTest {
     }
 
     @Test
-    @DisplayName("Check user creation without required fields")
-    @Description("Verify that system doesn't allow to create user by request without required field")
+    @DisplayName("Проверить создание пользователя, не отправляя обязательные поля")
+    @Description("Убедиться, что система не позволяет создать пользователя, не предоставляя обязательные поля")
     public void testNewUserCreationWithoutRequiredField() {
         UserResponse expectedObject = new UserResponse(false, requiredFieldNotSent);
         Response responseWithoutPassword = CreateUserSteps.createUserWithoutPassword(userEmail, userName);

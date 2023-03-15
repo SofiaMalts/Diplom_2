@@ -42,8 +42,8 @@ public class CreateOrderTest {
     }
 
     @Test
-    @DisplayName("Test order creation")
-    @Description("Test order creation with valid ingredient ids, invalid ingredient ids and without ingredient ids")
+    @DisplayName("Проверить создание заказа")
+    @Description("Проверить создание заказа с валидными id ингредиентов, невалидными id ингредиентов и без id ингредиентов.")
     public void testCreateOrder() {
         Order order = new Order(ingredient);
         Response response = OrderSteps.createOrder(order);

@@ -17,13 +17,13 @@ public class OrderSteps {
     private static final String badRequestError = "Ingredient ids must be provided";
     private static final String unauthorizedError = "You should be authorised";
 
-    @Step("Create order")
+    @Step("Создать заказ")
     public static Response createOrder(Object body) {
         return BaseMethods.postRequest(ordersEndpoint, body);
     }
 
     //Check response
-    @Step("Check response to create order request")
+    @Step("Проверить ответ на запрос создания заказа")
     public static void verifyCreateOrderResponse(Response response, String expectedResult) {
         switch (expectedResult) {
             case "success":
@@ -43,14 +43,14 @@ public class OrderSteps {
         }
     }
 
-    @Step("Get orders authorized request")
+    @Step("Запрос списка заказов авторизованным пользователем")
 
     public static Response getOrdersForUserAuthenticated(@Param(name = "authToken", mode=MASKED) String token) {
 
         return BaseMethods.getRequestAuthenticated(ordersEndpoint, token);
     }
 
-    @Step("Get orders unauthorized request")
+    @Step("Запрос списка заказов неавторизованным пользователем")
     public static Response getOrdersForUser() {
         return BaseMethods.getRequest(ordersEndpoint);
     }
@@ -58,7 +58,7 @@ public class OrderSteps {
     public static OrderResponse responseToObject(Response response) {
         return response.body().as(OrderResponse.class);
     }
-@Step("Check response status code")
+@Step("Проверить код ответа")
     public static void verifyGetOrdersResponseStatusCode(Response response, int expectedCode) {
         response.then().assertThat().statusCode(expectedCode);
     }
@@ -67,7 +67,7 @@ public class OrderSteps {
         OrderResponse responseAsObject = responseToObject(response);
         MatcherAssert.assertThat(responseAsObject, notNullValue());
     }
-    @Step("Check authorized response body")
+    @Step("Проверить тело ответа для авторизованного пользователя")
     public static void verifyAuthorizedGetOrdersResponseBody(Response response) {
         verifyGetOrderResponseNotNull(response);
         response.then().assertThat().body("success", is(true));
@@ -75,21 +75,21 @@ public class OrderSteps {
         response.then().assertThat().body("total", notNullValue());
         response.then().assertThat().body("totalToday", notNullValue());
     }
-    @Step("Check unauthorized response body")
+    @Step("Проверить тело ответа для неавторизованного пользователя")
     public static void verifyUnauthorizedGetOrdersResponseBody(Response response) {
         verifyGetOrderResponseNotNull(response);
         response.then().assertThat().body("success", is(false));
         response.then().assertThat().body("message", equalTo(unauthorizedError));
     }
 
-    @Step("Check response to authorized get orders request")
+    @Step("Проверить ответ на запрос списка заказов авторизованным пользователем")
     public static void verifyAuthorizedGetOrdersResponse(Response response) {
         int expectedCode = OK_CODE;
         verifyGetOrdersResponseStatusCode(response, expectedCode);
         verifyAuthorizedGetOrdersResponseBody(response);
     }
 
-    @Step("Check response to unauthorized get orders request")
+    @Step("Проверить ответ на запрос списка заказов неавторизованным пользователем")
     public static void verifyUnauthorizedGetOrdersResponse(Response response) {
         int expectedCode = UNAUTHORIZED_CODE;
         verifyGetOrdersResponseStatusCode(response, expectedCode);

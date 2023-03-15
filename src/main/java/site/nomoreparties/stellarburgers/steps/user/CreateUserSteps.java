@@ -1,5 +1,6 @@
 package site.nomoreparties.stellarburgers.steps.user;
 
+import io.qameta.allure.Param;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -7,6 +8,7 @@ import responses.user.UserResponse;
 import site.nomoreparties.stellarburgers.base.BaseMethods;
 
 import static constants.ResponseConstants.OK_CODE;
+import static io.qameta.allure.model.Parameter.Mode.MASKED;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -18,13 +20,13 @@ public class CreateUserSteps {
     private static final String userDataEndpoint = "/api/auth/user";
 
     //Create user
-    @Step("Create user")
+    @Step("Создать пользователя")
     public static Response createNewUser(Object body) {
         return BaseMethods.postRequest(createUserEndpoint, body);
     }
 
     //Create user without password
-    @Step("Try to create user without password")
+    @Step("Попробовать создать пользователя, не отправляя пароль")
     public static Response createUserWithoutPassword(String email, String login) {
         String body = "{\"email\": \"" + email + "\",\"name\": \"" + login + "\"}";
         return given()
@@ -34,7 +36,7 @@ public class CreateUserSteps {
     }
 
     //Create user without login
-    @Step("Try to create user without login")
+    @Step("Попробовать создать пользователя, не отправляя логин")
     public static Response createUserWithoutUsername(String email, String password) {
         String body = "{\"email\": \"" + email + "\",\"password\": \"" + password + "\"}";
         return given()
@@ -44,7 +46,7 @@ public class CreateUserSteps {
     }
 
     //Create user without email
-    @Step("Try to create user without email")
+    @Step("Попробовать создать пользователя, не отправляя email")
     public static Response createUserWithoutEmail(String login, String password) {
         String body = "{\"name\": \"" + login + "\",\"password\": \"" + password + "\"}";
         return given()
@@ -68,7 +70,7 @@ public class CreateUserSteps {
     }
 
     //Delete created user
-    @Step("Delete user")
+    @Step("Удалить пользователя")
     public static void deleteUser(Object body) {
         Response response = BaseMethods.postRequest(loginUserEndpoint, body);
         if (response.statusCode() == OK_CODE) {
@@ -101,25 +103,25 @@ public class CreateUserSteps {
         deleteByToken(token);
         return response;
     }
-    @Step("Delete user")
-    public static void deleteByToken(String token) {
+    @Step("Удалить пользователя")
+    public static void deleteByToken(@Param(name = "authToken", mode=MASKED) String token) {
         BaseMethods.deleteUserRequest(userDataEndpoint, token);
     }
 
-    @Step("Login")
+    @Step("Авторизоваться пользователем")
     public static Response loginUser(Object body) {
         return BaseMethods.postRequest(loginUserEndpoint, body);
     }
 
     //Check response body
-    @Step("Check response body")
+    @Step("Проверить тело ответа")
     public static void checkResponseBody(Response response, UserResponse expectedObject) {
         UserResponse responseAsObject = responseToObject(response);
         AssertionsForClassTypes.assertThat(responseAsObject).usingRecursiveComparison().isEqualTo(expectedObject);
     }
 
     //Check response body
-    @Step("Check response body")
+    @Step("Проверить тело ответа")
     public static void checkSuccessResponseBody(Response response, boolean expectedSuccess, String expectedEmail, String expectedUserName) {
         //System.out.println(response.body().asString());
         response.then().assertThat().body("success", equalTo(expectedSuccess));
@@ -129,7 +131,7 @@ public class CreateUserSteps {
         response.then().assertThat().body("refreshToken", notNullValue());
     }
 
-    @Step("Check user update response body")
+    @Step("Проверить тело ответа на запрос обновления данных пользователя")
     public static void checkSuccessUpdateResponseBody(Response response, boolean expectedSuccess, String expectedEmail, String expectedUserName) {
         response.then().assertThat().body("success", equalTo(expectedSuccess));
         response.then().assertThat().body("user.email", equalTo(expectedEmail.toLowerCase()));
@@ -137,27 +139,27 @@ public class CreateUserSteps {
     }
 
     //Check status code
-    @Step("Check status code")
+    @Step("Проверить код ответа")
     public static void checkResponseCode(Response response, int expectedCode) {
         response.then().assertThat().statusCode(expectedCode);
     }
 
     //Check response
-    @Step("Check response body and status code")
+    @Step("Проверить тело и статус ответа")
     public static void verifyResponseData(Response response, int expectedCode, UserResponse expectedObject) {
         checkResponseCode(response, expectedCode);
         checkResponseBody(response, expectedObject);
     }
 
     //Check successful creation response data
-    @Step("Check response body and status code")
+    @Step("Проверить тело и статус ответа")
     public static void verifySuccessfulCreationResponseData(Response response, int expectedCode, boolean expectedSuccess, String expectedEmail, String expectedUserName) {
         checkSuccessResponseBody(response, expectedSuccess, expectedEmail, expectedUserName);
         checkResponseCode(response, expectedCode);
 
     }
 
-    @Step("Check update response body and status code")
+    @Step("Проверить тело и статус ответа на запрос обновления данных пользователя")
     public static void verifySuccessfulUpdateResponseData(Response response, int expectedCode, boolean expectedSuccess, String expectedEmail, String expectedUserName) {
         checkSuccessUpdateResponseBody(response, expectedSuccess, expectedEmail, expectedUserName);
         checkResponseCode(response, expectedCode);
